@@ -1,12 +1,19 @@
 import sys, time
+import logging
 from threading import *
 
+def log():
+    return logging.getLogger("Generator")
+
+"""
+Generator
+"""
 class Generator:
     fragment = []
 
     def __init__(self, fragment):
         self.addFragment(fragment)
-        print "I am the Gen constructor"
+        log().debug("Starting " + str(self))
     
     def __str__(self):
         return "Generator"
@@ -18,14 +25,15 @@ class Generator:
         #Override me, call me
         pass
 
+
+"""
+Threaded Generator
+"""
 class ThreadedGenerator(Generator, Thread):
     def __init__(self, sleeptime, fragment):
-        print "I am the Threaded Generator"
         Generator.__init__(self, fragment)
         Thread.__init__(self)
         self.setDaemon(True)
-#        super(ThreadedGenerator, self).__init__(fragment)
- #       super(ThreadedGenerator, self).__init__()
         self.sleeptime = sleeptime
 
     def stop(self):
@@ -40,19 +48,31 @@ class ThreadedGenerator(Generator, Thread):
             self.write()
             time.sleep(self.sleeptime)
 
+    def __str__(self):
+        return "ThreadedGenerator"
+
+
+"""
+Test thing
+"""
 class Over(ThreadedGenerator):
     def __init__(self, sleeptime, fragment):
-        super(Over, self).__init__(sleeptime, fragment)
+        ThreadedGenerator.__init__(self, sleeptime, fragment)
 
     def write(self):
         print "add"
 
-
+"""
+GeneratorFactory generates generaly Generators
+"""
 class GeneratorFactory:
     @staticmethod
     def m1():
         print "static m1"
 
+"""
+Let the GeneratorFactory listen on a port
+"""
 class ListeningGeneratorFactory(GeneratorFactory):
     @staticmethod
     def m2():
