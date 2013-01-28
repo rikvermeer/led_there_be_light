@@ -1,12 +1,19 @@
 import sys, time
+import logging
 from threading import *
 
+def log():
+    return logging.getLogger("Generator")
+
+"""
+Generator
+"""
 class Generator:
     fragment = []
 
     def __init__(self, fragment):
         self.addFragment(fragment)
-        print "I am the Gen constructor"
+        log().debug("Starting " + str(self))
     
     def __str__(self):
         return "Generator"
@@ -18,14 +25,15 @@ class Generator:
         #Override me, call me
         pass
 
+
+"""
+Threaded Generator
+"""
 class ThreadedGenerator(Generator, Thread):
     def __init__(self, sleeptime, fragment):
-        print "I am the Threaded Generator"
         Generator.__init__(self, fragment)
         Thread.__init__(self)
         self.setDaemon(True)
-#        super(ThreadedGenerator, self).__init__(fragment)
- #       super(ThreadedGenerator, self).__init__()
         self.sleeptime = sleeptime
 
     def stop(self):
@@ -40,19 +48,31 @@ class ThreadedGenerator(Generator, Thread):
             self.write()
             time.sleep(self.sleeptime)
 
+    def __str__(self):
+        return "ThreadedGenerator"
+
+
+"""
+Test thing
+"""
 class Over(ThreadedGenerator):
     def __init__(self, sleeptime, fragment):
-        super(Over, self).__init__(sleeptime, fragment)
+        ThreadedGenerator.__init__(self, sleeptime, fragment)
 
     def write(self):
         print "add"
 
-
+"""
+GeneratorFactory generates generaly Generators
+"""
 class GeneratorFactory:
     @staticmethod
     def m1():
         print "static m1"
 
+"""
+Let the GeneratorFactory listen on a port
+"""
 class ListeningGeneratorFactory(GeneratorFactory):
     @staticmethod
     def m2():
@@ -60,10 +80,10 @@ class ListeningGeneratorFactory(GeneratorFactory):
         print "static m2"
 
 
-a = ListeningGeneratorFactory()
-a.m2()
-ListeningGeneratorFactory.m2()
 
+
+
+logging.basicConfig(level=logging.DEBUG)
 d = Over(0.1, [0,0,128])
 d.start()
 
@@ -75,9 +95,9 @@ try:
 except KeyboardInterrupt:
     for g in generators:
         g.stop()
-        print "stopping: " + str(g)
+        logging.debug("stopping: " + str(g))
         g.join()
-        print "joining: " + str(g)
-    print "EXITING"
+        logging.debug("joining: " + str(g))
+    logging.info("EXITING")
     sys.exit(1)
 
