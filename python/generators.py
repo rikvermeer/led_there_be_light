@@ -59,25 +59,25 @@ class ListeningGeneratorFactory(GeneratorFactory):
         GeneratorFactory.m1()
         print "static m2"
 
+if __name__ == "__main__":
+    a = ListeningGeneratorFactory()
+    a.m2()
+    ListeningGeneratorFactory.m2()
 
-a = ListeningGeneratorFactory()
-a.m2()
-ListeningGeneratorFactory.m2()
+    d = Over(0.1, [0,0,128])
+    d.start()
 
-d = Over(0.1, [0,0,128])
-d.start()
-
-generators = []
-generators.append(d)
-try:
-    while(True):
-        time.sleep(0.01) 
-except KeyboardInterrupt:
-    for g in generators:
-        g.stop()
-        print "stopping: " + str(g)
-        g.join()
-        print "joining: " + str(g)
-    print "EXITING"
-    sys.exit(1)
+    generators = []
+    generators.append(d)
+    try:
+        while(True):
+            time.sleep(0.01) 
+    except KeyboardInterrupt:
+        for g in generators:
+            g.stop()
+            print "stopping: " + str(g)
+            g.join()
+            print "joining: " + str(g)
+        print "EXITING"
+        sys.exit(1)
 
