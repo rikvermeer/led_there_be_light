@@ -45,11 +45,12 @@ f_key = Fragment(len(key), key)
 colors = [[0, 0, 255], [0,255,0], [255,0,0]]
 getch = _Getch()
 g_key = ThreadedGenerator(0.01, f_key)
-g_key.start = 0
-g_key.end = 0
-g_key.done = []
+g_key.lstart = 0
+g_key.lend = 0
+g_key.done = [[0,0]]
 def write_key():
     c = ord(getch.__call__())
+    print c
     changed = False
     if c == 224:
         c = ord(getch.__call__())
@@ -57,27 +58,27 @@ def write_key():
         pass
     elif c == 80:
         pass
-    elif c == 75:
-        g_key.end -= 1
+    elif c == 68:
+        g_key.lend -= 1
         changed = True
-    elif c == 77:
+    elif c == 67:
         changed = True
-        g_key.end += 1
+        g_key.lend += 1
     elif chr(c).isspace():
         changed = True
-        g_key.done.append([g_key.start, g_key.end])
-        g_key.start = g_key.end
+        g_key.done.append([g_key.lstart, g_key.lend])
+        g_key.lstart = g_key.lend
     if changed:
-        g_key.end = sanitize(g_key.end)
-        
+        g_key.lend = sanitize(g_key.lend)
+        print g_key.done        
         for index, value in enumerate(g_key.done):
             color = colors[index]
             for i in range(value[0], value[1]):
                 for index, value in enumerate(color):
                     g_key.fragment.data[i * 3 + index] = value
         
-        g_key.fragment.data[g_key.start * 3 + 1] = 255
-        g_key.fragment.data[g_key.stop * 3] = 255
+        g_key.fragment.data[g_key.lstart * 3 + 1] = 255
+        g_key.fragment.data[g_key.lend * 3] = 255
     
 def sanitize(pos):
     if pos < 0:
@@ -85,8 +86,12 @@ def sanitize(pos):
     if pos > g_key.fragment.size -1:
         pos = g_key.fragment.size -1
     return pos
-    
-fc = FragmentController()
+
+print str(g_key)
+lc = LedController(260)   
+fc = FragmentController(lc)
 fc.addFragment(f_key)
+g_key.write = write_key
 g_key.start()
 fc.start()
+
