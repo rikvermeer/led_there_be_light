@@ -9,17 +9,13 @@ def log():
 Generator
 """
 class Generator:
-    fragment = []
 
     def __init__(self, fragment):
-        self.addFragment(fragment)
+        self.fragment = fragment
         log().debug("Starting " + str(self))
     
     def __str__(self):
         return "Generator"
-
-    def addFragment(self, fragment):
-        self.fragment.extend(fragment)
 
     def write(self):
         #Override me, call me

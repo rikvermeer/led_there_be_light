@@ -61,8 +61,11 @@ class FragmentController(Thread):
         data = [0] * (ledsize * 3)
 
         for fragment in self.fragments:
+            #print "writing fragment"
             fragmentData = fragment.getData();
             fragmentMapping = fragment.getMapping();
+            #print "data: ", fragmentData
+            #print "mapping: ", fragmentMapping
             for i in range(0, len(fragmentMapping)):
                 ledposition = fragmentMapping[i]
                 data[ledposition * 3] = fragmentData[i * 3] 
