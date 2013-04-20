@@ -41,7 +41,7 @@ g_nozzle = ThreadedGenerator(0.1, f_nozzle)
 #g_barrel = ThreadedGenerator(0.01, f_barrel)
 #g_nozzle = ThreadedGenerator(0.01, f_nozzle)
 
-
+"""Binary counter"""
 g_stud.i = 0
 g_stud.max = pow(2, g_stud.fragment.size)
 def write_stud():
