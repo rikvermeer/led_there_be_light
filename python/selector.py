@@ -1,4 +1,4 @@
-"""Read the keyboard to set a begin and endpoint for a led fragment. 
+"""Read the keyboard to set a begin and endpoint for a led fragment. """
 
 class _Getch:
     """Gets a single character from standard input.  Does not echo to the
